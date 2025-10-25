@@ -41,7 +41,7 @@ class Synapse:
     self.synaptic_weights = torch.randn(self.neurons_in.weights.shape,dtype = torch.float)
 
   def forward(self,inputs):
-    return torch.mul(self.synaptic_weights,inputs)
+    return torch.mul(self.synaptic_weights,inputs).squeeze(0)
 
   def update_synapse(self):
     dw = self.a_pre * torch.mul(self.neurons_in.spiked,self.neurons_out.spiked) - self.a_post * torch.mul(self.neurons_out.spiked,self.neurons_in.spiked)
