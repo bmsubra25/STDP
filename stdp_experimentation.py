@@ -38,7 +38,7 @@ class Synapse:
     self.neurons_out = neurons_out
     self.a_pre = a_pre
     self.a_post = a_post
-    self.synaptic_weights = torch.randn(self.neurons_in.weight.shape,dtype = torch.float)
+    self.synaptic_weights = torch.randn(self.neurons_in.weights.shape,dtype = torch.float)
 
   def forward(self,inputs):
     return torch.mul(self.synaptic_weights,inputs)
