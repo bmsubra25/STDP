@@ -17,7 +17,7 @@ class LIF_Layer:
   def __init__(self,batch_size,dim1,dim2,decay,threshold,inhibitory):
     self.decay = decay;
     self.memb_potential = torch.zeros((batch_size, dim1,dim2),dtype = torch.float)
-    self.weights = torch.randn((batch_size,dim1,dim2),dtype = torch.float)
+    self.weights = 0.01 * torch.randn((batch_size,dim1,dim2),dtype = torch.float)
     self.threshold = threshold*torch.ones((batch_size, dim1,dim2),dtype = torch.float)
     self.inhbitory = 1
     if(inhibitory):
@@ -37,7 +37,8 @@ class Synapse:
     self.neurons_out = neurons_out
     self.a_pre = a_pre
     self.a_post = a_post
-    self.synaptic_weights = torch.randn(self.neurons_in.weights.shape,dtype = torch.float)
+    self.synaptic_weights = 0.01 * torch.randn(self.neurons_in.weights.shape,dtype = torch.float)
+    torch.nn.init.xavier_uniform_(self.synaptic_weights)
 
   def forward(self,inputs):
     return torch.mul(self.synaptic_weights,inputs).squeeze(0)
