@@ -24,7 +24,6 @@ class LIF_Layer:
       self.inhibitory = -1
 
   def forward(self,inputs):
-    print(f"inputs shape {inputs.shape}")
     self.memb_potential = self.decay * self.memb_potential + self.inhbitory * torch.mul(self.weights,inputs)
     self.spiked = (self.memb_potential > self.threshold).float()
     self.memb_potential = self.memb_potential - self.spiked * self.threshold
