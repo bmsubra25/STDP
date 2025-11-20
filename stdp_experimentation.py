@@ -25,7 +25,7 @@ class LIF_Layer:
 
   def forward(self,inputs):
     print(f"inputs shape {inputs.shape}")
-    self.memb_potential = self.decay * self.memb_potential + self.inhbitory * torch.mul(self.weights,inputs)
+    self.memb_potential = self.decay * self.memb_potential + self.inhbitory * torch.matmul(self.weights,inputs)
     self.spiked = (self.memb_potential > self.threshold).float()
     self.memb_potential = self.memb_potential - self.spiked * self.threshold
     return self.spiked
@@ -44,5 +44,5 @@ class Synapse:
     return torch.matmul(self.synaptic_weights,inputs)
 
   def update_synapse(self):
-    dw = self.a_pre * torch.mul(self.neurons_in.spiked,self.neurons_out.spiked) - self.a_post * torch.mul(self.neurons_out.spiked,self.neurons_in.spiked)
+    dw = self.a_pre * torch.matmul(self.neurons_in.spiked,self.neurons_out.spiked) - self.a_post * torch.matmul(self.neurons_out.spiked,self.neurons_in.spiked)
     self.synaptic_weights += dw
