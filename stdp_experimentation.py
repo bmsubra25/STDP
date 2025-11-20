@@ -17,13 +17,14 @@ class LIF_Layer:
   def __init__(self,batch_size,dim1,dim2,decay,threshold,inhibitory):
     self.decay = decay;
     self.memb_potential = torch.zeros((batch_size, dim1,dim2),dtype = torch.float)
-    self.weights = 0.1 * torch.randn((batch_size,dim1,dim2),dtype = torch.float)
+    self.weights = torch.randn((batch_size,dim1,dim2),dtype = torch.float)
     self.threshold = threshold*torch.ones((batch_size, dim1,dim2),dtype = torch.float)
     self.inhbitory = 1
     if(inhibitory):
       self.inhibitory = -1
 
   def forward(self,inputs):
+    print(f"inputs shape {inputs.shape}")
     self.memb_potential = self.decay * self.memb_potential + self.inhbitory * torch.mul(self.weights,inputs)
     self.spiked = (self.memb_potential > self.threshold).float()
     self.memb_potential = self.memb_potential - self.spiked * self.threshold
@@ -37,11 +38,10 @@ class Synapse:
     self.neurons_out = neurons_out
     self.a_pre = a_pre
     self.a_post = a_post
-    self.synaptic_weights = 0.1 * torch.randn(self.neurons_in.weights.shape,dtype = torch.float)
-    torch.nn.init.xavier_uniform_(self.synaptic_weights)
+    self.synaptic_weights = torch.randn(self.neurons_in.weights.shape,dtype = torch.float)
 
   def forward(self,inputs):
-    return torch.mul(self.synaptic_weights,inputs).squeeze(0)
+    return torch.matmul(self.synaptic_weights,inputs)
 
   def update_synapse(self):
     dw = self.a_pre * torch.mul(self.neurons_in.spiked,self.neurons_out.spiked) - self.a_post * torch.mul(self.neurons_out.spiked,self.neurons_in.spiked)
